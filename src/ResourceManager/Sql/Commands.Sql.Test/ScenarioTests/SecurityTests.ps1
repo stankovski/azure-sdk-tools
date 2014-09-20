@@ -19,8 +19,9 @@ Tests that when setting the storage account property's value in a database's aud
 function Test-DatabaseUpdatePolicyWithStorage
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 101
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try 
 	{
@@ -36,7 +37,7 @@ function Test-DatabaseUpdatePolicyWithStorage
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -47,8 +48,9 @@ Tests that when setting the storage account property's value in a server's audit
 function Test-ServerUpdatePolicyWithStorage
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 201
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try
 	{
@@ -63,7 +65,7 @@ function Test-ServerUpdatePolicyWithStorage
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -75,8 +77,9 @@ storage account, you don't need to provide it.
 function Test-DatabaseUpdatePolicyKeepPreviousStorage
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 301
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try 
 	{
@@ -95,7 +98,7 @@ function Test-DatabaseUpdatePolicyKeepPreviousStorage
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -107,8 +110,9 @@ storage account, you don't need to provide it.
 function Test-ServerUpdatePolicyKeepPreviousStorage
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 401
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try 
 	{
@@ -127,7 +131,7 @@ function Test-ServerUpdatePolicyKeepPreviousStorage
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -138,8 +142,9 @@ Tests that when modifying the eventType property of a databases's auditing polic
 function Test-DatabaseUpdatePolicyWithEventTypes
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 501
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try
 	{
@@ -170,7 +175,7 @@ function Test-DatabaseUpdatePolicyWithEventTypes
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -181,8 +186,9 @@ Tests that when modifying the eventType property of a server's auditing policy (
 function Test-ServerUpdatePolicyWithEventTypes
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 601
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try
 	{
@@ -213,7 +219,7 @@ function Test-ServerUpdatePolicyWithEventTypes
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -224,8 +230,9 @@ Tests the modification of a database's auting policy event types with the 'All' 
 function Test-DatabaseUpdatePolicyWithEventTypeShortcuts
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 701
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try
 	{
@@ -267,7 +274,7 @@ function Test-DatabaseUpdatePolicyWithEventTypeShortcuts
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -278,8 +285,9 @@ Tests the modification of a server's auditing policy event types with the 'All' 
 function Test-ServerUpdatePolicyWithEventTypeShortcuts
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 801
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try
 	{
@@ -321,7 +329,7 @@ function Test-ServerUpdatePolicyWithEventTypeShortcuts
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -332,8 +340,9 @@ Tests that when asking to disable auditing of a database, later when fetching th
 function Test-DisableDatabaseAuditing
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 901
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try
 	{
@@ -348,7 +357,7 @@ function Test-DisableDatabaseAuditing
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -359,8 +368,9 @@ Tests that when asking to disable auditing of a server, later when fetching the 
 function Test-DisableServerAuditing
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 111
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try
 	{
@@ -375,7 +385,7 @@ function Test-DisableServerAuditing
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -386,8 +396,9 @@ Tests that when disabling an already existing auditing policy on a database and 
 function Test-DatabaseDisableEnableKeepProperties
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 121
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try
 	{
@@ -407,7 +418,7 @@ function Test-DatabaseDisableEnableKeepProperties
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -418,8 +429,9 @@ Tests that when disabling an already existing auditing policy on a server and th
 function Test-ServerDisableEnableKeepProperties
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 131
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 	
 	try
 	{
@@ -439,7 +451,7 @@ function Test-ServerDisableEnableKeepProperties
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -450,8 +462,9 @@ Tests that after marking a database as using its server's policy, when fetching 
 function Test-UseServerDefault
 {
     # Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 141
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try
 	{
@@ -466,7 +479,7 @@ function Test-UseServerDefault
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -477,8 +490,9 @@ Tests that a failure occurs when trying to set a policy to a database, and that 
 function Test-FailedDatabaseUpdatePolicyWithNoStorage
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 151
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try
 	{
@@ -488,7 +502,7 @@ function Test-FailedDatabaseUpdatePolicyWithNoStorage
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -499,8 +513,9 @@ Tests that a failure occurs when trying to set a policy to a server, and that po
 function Test-FailedServerUpdatePolicyWithNoStorage
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 161
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try
 	{
@@ -510,7 +525,7 @@ function Test-FailedServerUpdatePolicyWithNoStorage
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -521,8 +536,9 @@ Tests that a failure occurs when trying to make a database use its server's audi
 function Test-FailedUseServerDefault
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 171
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try
 	{
@@ -532,7 +548,7 @@ function Test-FailedUseServerDefault
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -543,8 +559,9 @@ Tests that it is impossible to use non existing database with the cmdlets
 function Test-FailWithBadDatabaseIndentity
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 181
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try 
 	{
@@ -557,7 +574,7 @@ function Test-FailWithBadDatabaseIndentity
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
 
@@ -568,8 +585,9 @@ Tests that it is impossible to use non existing server with the cmdlets
 function Test-FailWithBadServerIndentity
 {
 	# Setup
-	Create-TestEnvironment
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$testSuffix = 191
+	Create-TestEnvironment $testSuffix
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 
 	try 
 	{
@@ -582,7 +600,6 @@ function Test-FailWithBadServerIndentity
 	finally
 	{
 		# Cleanup
-		Remove-TestEnvironment
+		Remove-TestEnvironment $testSuffix
 	}
 }
-

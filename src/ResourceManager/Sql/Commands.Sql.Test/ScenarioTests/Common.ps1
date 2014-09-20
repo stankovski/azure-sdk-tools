@@ -12,17 +12,16 @@
 # limitations under the License.
 # ----------------------------------------------------------------------------------
 
-$randSuffix = Get-Random -Minimum 100 -Maximum 99999;
 <#
 .SYNOPSIS
 Gets the values of the parameters used at the auditing tests
 #>
-function Get-SqlAuditingTestEnvironmentParameters 
+function Get-SqlAuditingTestEnvironmentParameters ($testSuffix)
 {
-	return @{ rgname = "sql-audit-cmdlet-test-rg" +$randSuffix;
-			  serverName = "sql-audit-cmdlet-server" +$randSuffix;
-			  databaseName = "sql-audit-cmdlet-db" + $randSuffix;
-			  storageAccount = "auditcmdlets" +$randSuffix
+	return @{ rgname = "sql-audit-cmdlet-test-rg" +$testSuffix;
+			  serverName = "sql-audit-cmdlet-server" +$testSuffix;
+			  databaseName = "sql-audit-cmdlet-db" + $testSuffix;
+			  storageAccount = "auditcmdlets" +$testSuffix
 			  }
 }
 
@@ -30,9 +29,9 @@ function Get-SqlAuditingTestEnvironmentParameters
 .SYNOPSIS
 Creates the test environment needed to perform the Sql auditing tests
 #>
-function Create-TestEnvironment 
+function Create-TestEnvironment ($testSuffix)
 {
-	$params = Get-SqlAuditingTestEnvironmentParameters
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
 	New-AzureStorageAccount -StorageAccountName $params.storageAccount -Location "West US" 
 	New-AzureResourceGroup -Name $params.rgname -Location "West US" -TemplateFile ".\Templates\sql-audit-test-env-setup.json" -serverName $params.serverName -databaseName $params.databaseName -EnvLocation "West US" -Force
 }
@@ -41,9 +40,9 @@ function Create-TestEnvironment
 .SYNOPSIS
 Removes the test environment that was needed to perform the Sql auditing tests
 #>
-function Remove-TestEnvironment 
+function Remove-TestEnvironment ($testSuffix)
 {
-	$params = Get-SqlAuditingTestEnvironmentParameters
-	Remove-AzureResourceGroup -Name $params.rgname -force
+	$params = Get-SqlAuditingTestEnvironmentParameters $testSuffix
+	#Remove-AzureResourceGroup -Name $params.rgname -force
 	Remove-AzureStorageAccount -StorageAccountName $params.storageAccount
 }

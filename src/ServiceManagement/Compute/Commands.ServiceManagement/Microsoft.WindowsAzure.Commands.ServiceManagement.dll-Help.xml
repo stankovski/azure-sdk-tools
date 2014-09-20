@@ -28599,7 +28599,7 @@ PS C:\&gt; Set-AzureServiceAntimalwareExtension -ServiceName &quot;ContosoServic
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
 				<maml:name>ReferenceName</maml:name>
 				<maml:description>
-					<maml:para>The Extension Reference Name</maml:para>
+					<maml:para>This is a user-defined string that can be used to refer to an extension. It is specified when the extension is added to the VM for the first time. For subsequent updates, user should specify the previously used reference name while updating the extension. The ReferenceName assigned to an extension will be returned using the Get-AzureVM cmdlet.</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
@@ -28607,7 +28607,7 @@ PS C:\&gt; Set-AzureServiceAntimalwareExtension -ServiceName &quot;ContosoServic
 				<maml:name>ConfigurationArgument</maml:name>
 				<maml:description>
 					<maml:para>A hashtable specifying the arguments to the configuration function. The keys correspond to the parameter names and the values to the parameter values.
-  Supported types for values include: primitive types, string, hashtable, array, PSCredential.</maml:para>
+Supported types for values include: primitive types, string, array and PSCredential.</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
 			</command:parameter>
@@ -28698,7 +28698,7 @@ If omitted, this parameter will default to the name of the file given by the Con
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="named">
 			<maml:name>ReferenceName</maml:name>
 			<maml:description>
-				<maml:para>The Extension Reference Name</maml:para>
+				<maml:para>This is a user-defined string that can be used to refer to an extension. It is specified when the extension is added to the VM for the first time. For subsequent updates, user should specify the previously used reference name while updating the extension. The ReferenceName assigned to an extension will be returned using the Get-AzureVM cmdlet.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -28711,7 +28711,7 @@ If omitted, this parameter will default to the name of the file given by the Con
 			<maml:name>ConfigurationArgument</maml:name>
 			<maml:description>
 				<maml:para>A hashtable specifying the arguments to the configuration function. The keys correspond to the parameter names and the values to the parameter values.
-  Supported types for values include: primitive types, string, hashtable, array, PSCredential.</maml:para>
+Supported types for values include: primitive types, string, array and PSCredential.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
 			<dev:type>
@@ -28942,30 +28942,30 @@ The &quot;MyConfiguration&quot; argument indicates the specific DSC configuratio
 			<dev:code>PS C:\&gt; $vm | Set-AzureVMDscExtension -ConfigurationArchive MyConfiguration.ps1.zip  -ConfigurationName MyConfiguration -ConfigurationArgument @{ Credential = Get-Credential } -ConfigurationDataPath MyConfigurationData.psd1 
 
 
-  DeploymentName              : my-vm-svc
-  Name                        : my-vm
-  Label                       : 
-  VM                          : Microsoft.WindowsAzure.Commands.ServiceManagement.Model.PersistentVM
-  InstanceStatus              : ReadyRole
-  IpAddress                   : 10.10.10.10
-  InstanceStateDetails        : 
-  PowerState                  : Started
-  InstanceErrorCode           : 
-  InstanceFaultDomain         : 0
-  InstanceName                : my-vm
-  InstanceUpgradeDomain       : 0
-  InstanceSize                : Small
-  AvailabilitySetName         : 
-  DNSName                     : http://my-vm-svc.cloudapp.net/
-  Status                      : ReadyRole
-  GuestAgentStatus            : Microsoft.WindowsAzure.Commands.ServiceManagement.Model.PersistentVMModel.GuestAgentStatus
-  ResourceExtensionStatusList : {Microsoft.Compute.BGInfo, Microsoft.Powershell.DSC}
-  PublicIPAddress             : 
-  PublicIPName                : 
-  ServiceName                 : my-vm-svc
-  OperationDescription        : Get-AzureVM
-  OperationId                 : a0217a7af900c1f8a212299a3333cdbd7
-  OperationStatus             : OK</dev:code>
+DeploymentName              : my-vm-svc
+Name                        : my-vm
+Label                       : 
+VM                          : Microsoft.WindowsAzure.Commands.ServiceManagement.Model.PersistentVM
+InstanceStatus              : ReadyRole
+IpAddress                   : 10.10.10.10
+InstanceStateDetails        : 
+PowerState                  : Started
+InstanceErrorCode           : 
+InstanceFaultDomain         : 0
+InstanceName                : my-vm
+InstanceUpgradeDomain       : 0
+InstanceSize                : Small
+AvailabilitySetName         : 
+DNSName                     : http://my-vm-svc.cloudapp.net/
+Status                      : ReadyRole
+GuestAgentStatus            : Microsoft.WindowsAzure.Commands.ServiceManagement.Model.PersistentVMModel.GuestAgentStatus
+ResourceExtensionStatusList : {Microsoft.Compute.BGInfo, Microsoft.Powershell.DSC}
+PublicIPAddress             : 
+PublicIPName                : 
+ServiceName                 : my-vm-svc
+OperationDescription        : Get-AzureVM
+OperationId                 : a0217a7af900c1f8a212299a3333cdbd7
+OperationStatus             : OK</dev:code>
 			<dev:remarks>
 				<maml:para>Description</maml:para>
 			</dev:remarks>
@@ -28973,9 +28973,9 @@ The &quot;MyConfiguration&quot; argument indicates the specific DSC configuratio
 				<command:commandLine>
 					<command:commandText>-----------You can pass -VM parameter from the pipeline.
 
-  -ConfigurationArgument parameter supports PSCredential as a value.
+-ConfigurationArgument parameter supports PSCredential as a value.
 
-  -ConfigurationDataPath parameter takes path to .psd1 file with ConfigurationData hashtable.</command:commandText>
+-ConfigurationDataPath parameter takes path to .psd1 file with ConfigurationData hashtable.</command:commandText>
 				</command:commandLine>
 			</command:commandLines>
 		</command:example>

@@ -297,7 +297,7 @@ namespace Microsoft.WindowsAzure.Commands.ServiceManagement.IaaS.Extensions
                                                                 string.Format(CultureInfo.CurrentUICulture,
                                                                                 Resources.AzureVMDscStorageBlobAlreadyExists,
                                                                                 configurationDataBlobName)),
-                                                            string.Empty,
+                                                            "StorageBlobAlreadyExists",
                                                             ErrorCategory.PermissionDenied,
                                                             null));
                                                 }

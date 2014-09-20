@@ -14,11 +14,12 @@
 
 using Microsoft.Azure.Management.Sql;
 using Microsoft.Azure.Management.Resources;
+using Microsoft.WindowsAzure.Commands.ScenarioTest;
 using Microsoft.WindowsAzure.Commands.Utilities.Common;
 using Microsoft.WindowsAzure.Management.Storage;
 using Microsoft.WindowsAzure.Testing;
 
-namespace Microsoft.WindowsAzure.Commands.ScenarioTest.SqlTests
+namespace Microsoft.Azure.Commands.ScenarioTest.SqlTests
 {
     public class SqlTestsBase
     {
