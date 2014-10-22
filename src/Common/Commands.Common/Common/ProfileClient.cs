@@ -1142,5 +1142,51 @@ namespace Microsoft.WindowsAzure.Commands.Common
             return Profile.Environments[environment.Name];
         }
         #endregion
+
+        public void Repair(bool whatIf)
+        {
+            RepairEnvironments(whatIf);    
+        }
+
+        private static AzureEnvironment.Endpoint[] endpointsToValidate = {
+            AzureEnvironment.Endpoint.ActiveDirectory,
+            AzureEnvironment.Endpoint.ActiveDirectoryServiceEndpointResourceId,
+            AzureEnvironment.Endpoint.AdTenant,
+            AzureEnvironment.Endpoint.Gallery,
+            AzureEnvironment.Endpoint.Graph,
+            AzureEnvironment.Endpoint.ManagementPortalUrl,
+            AzureEnvironment.Endpoint.PublishSettingsFileUrl,
+            AzureEnvironment.Endpoint.ResourceManager,
+            AzureEnvironment.Endpoint.ServiceManagement,
+        };
+
+        private void RepairEnvironments(bool whatIf)
+        {
+            List<string> namesToRemove = new List<string>();
+            foreach (var kvp in Profile.Environments)
+            {
+                string name = kvp.Key;
+                var env = kvp.Value;
+
+                bool isValid = endpointsToValidate
+                    .All(endpoint => env.Endpoints.ContainsKey(endpoint) && IsValidUri(env.Endpoints[endpoint]));
+                if (!isValid)
+                {
+                    namesToRemove.Add(name);
+                }
+            }
+
+            foreach (string name in namesToRemove)
+            {
+                Profile.Environments.Remove(name);
+            }
+
+        }
+
+        private bool IsValidUri(string uri)
+        {
+            Uri result;
+            return Uri.TryCreate(uri, UriKind.Absolute, out result);
+        }
     }
 }
