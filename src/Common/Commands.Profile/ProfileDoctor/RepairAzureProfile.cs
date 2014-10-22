@@ -24,13 +24,10 @@ namespace Microsoft.WindowsAzure.Commands.Profile
     /// <summary>
     /// Repairs Azure Profile
     /// </summary>
-    [Cmdlet(VerbsDiagnostic.Repair, "AzureProfile")]
+    [Cmdlet(VerbsDiagnostic.Repair, "AzureProfile", SupportsShouldProcess = true)]
     [OutputType(typeof(PSAzureSubscription), typeof(PSAzureAccount), typeof(AzureEnvironment))]
     public class RepairAzureProfileCommand : SubscriptionCmdletBase
     {
-        [Parameter(Position = 1, HelpMessage = "Simulates the behavior of repair operation")]
-        public SwitchParameter WhatIf { get; set; }
-
         public RepairAzureProfileCommand() : base(true) { }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
