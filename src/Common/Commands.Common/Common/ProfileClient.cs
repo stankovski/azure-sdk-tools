@@ -1145,7 +1145,7 @@ namespace Microsoft.WindowsAzure.Commands.Common
 
         public void Repair(Func<string, bool> shouldProcess)
         {
-            RepairEnvironments(true);    
+            RepairEnvironments(shouldProcess);    
         }
 
         private static AzureEnvironment.Endpoint[] endpointsToValidate = {
@@ -1166,7 +1166,7 @@ namespace Microsoft.WindowsAzure.Commands.Common
             AzureEnvironment.Endpoint.ServiceManagement,
         };
 
-        private void RepairEnvironments(bool whatIf)
+        private void RepairEnvironments(Func<string, bool> shouldProcess)
         {
             List<string> namesToRemove = new List<string>();
             foreach (var kvp in Profile.Environments)
@@ -1187,9 +1187,11 @@ namespace Microsoft.WindowsAzure.Commands.Common
 
             foreach (string name in namesToRemove)
             {
-                Profile.Environments.Remove(name);
+                if (shouldProcess(string.Format("Environment {0} is invalid and will be removed", name)))
+                {
+                    Profile.Environments.Remove(name);
+                }
             }
-
         }
 
         private bool IsValidUri(string uri)
