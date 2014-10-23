@@ -1143,9 +1143,9 @@ namespace Microsoft.WindowsAzure.Commands.Common
         }
         #endregion
 
-        public void Repair(bool whatIf)
+        public void Repair(Func<string, bool> shouldProcess)
         {
-            RepairEnvironments(whatIf);    
+            RepairEnvironments(true);    
         }
 
         private static AzureEnvironment.Endpoint[] endpointsToValidate = {
@@ -1160,6 +1160,12 @@ namespace Microsoft.WindowsAzure.Commands.Common
             AzureEnvironment.Endpoint.ServiceManagement,
         };
 
+        private static AzureEnvironment.Endpoint[] requiredEndpoints = {
+            AzureEnvironment.Endpoint.ActiveDirectory,
+            AzureEnvironment.Endpoint.ActiveDirectoryServiceEndpointResourceId,
+            AzureEnvironment.Endpoint.ServiceManagement,
+        };
+
         private void RepairEnvironments(bool whatIf)
         {
             List<string> namesToRemove = new List<string>();
@@ -1168,9 +1174,12 @@ namespace Microsoft.WindowsAzure.Commands.Common
                 string name = kvp.Key;
                 var env = kvp.Value;
 
+                bool hasRequiredKeys = requiredEndpoints.All(ep => env.Endpoints.ContainsKey(ep));
+
                 bool isValid = endpointsToValidate
-                    .All(endpoint => env.Endpoints.ContainsKey(endpoint) && IsValidUri(env.Endpoints[endpoint]));
-                if (!isValid)
+                    .All(endpoint => 
+                        !env.Endpoints.ContainsKey(endpoint) || IsValidUri(env.Endpoints[endpoint]));
+                if (!(isValid && hasRequiredKeys))
                 {
                     namesToRemove.Add(name);
                 }

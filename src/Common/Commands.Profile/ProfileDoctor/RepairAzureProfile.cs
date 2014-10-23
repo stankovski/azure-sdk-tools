@@ -33,7 +33,8 @@ namespace Microsoft.WindowsAzure.Commands.Profile
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public override void ExecuteCmdlet()
         {
-            ProfileClient.Repair(WhatIf.IsPresent);
+            ProfileClient.Repair(ShouldProcess);
         }
     }
 }
+
