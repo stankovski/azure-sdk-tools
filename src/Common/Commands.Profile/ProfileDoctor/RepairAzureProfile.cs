@@ -17,34 +17,23 @@ using System.Security.Permissions;
 using Microsoft.WindowsAzure.Commands.Common.Models;
 using Microsoft.WindowsAzure.Commands.Common.Properties;
 using Microsoft.WindowsAzure.Commands.Utilities.Profile;
+using Microsoft.WindowsAzure.Commands.Profile.Models;
 
 namespace Microsoft.WindowsAzure.Commands.Profile
 {
     /// <summary>
-    /// Clears Azure Profile
+    /// Repairs Azure Profile
     /// </summary>
-    [Cmdlet(VerbsCommon.Clear, "AzureProfile"), OutputType(typeof(bool))]
-    public class ClearAzureProfileCommand : SubscriptionCmdletBase
+    [Cmdlet(VerbsDiagnostic.Repair, "AzureProfile", SupportsShouldProcess = true)]
+    [OutputType(typeof(PSAzureSubscription), typeof(PSAzureAccount), typeof(AzureEnvironment))]
+    public class RepairAzureProfileCommand : SubscriptionCmdletBase
     {
-        [Parameter(Position = 1, HelpMessage = "Force deletion of AzureProfile without prompt")]
-        public SwitchParameter Force { get; set; }
-
-        public ClearAzureProfileCommand() : base(true) { }
+        public RepairAzureProfileCommand() : base(true) { }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public override void ExecuteCmdlet()
         {
-            ConfirmAction(
-                Force.IsPresent, Resources.RemoveProfileConfirmation,
-                Resources.RemoveProfileMessage,
-                "AzureProfile",
-                RemoveProfileProcess);
-        }
-
-        public void RemoveProfileProcess()
-        {
-            ProfileClient.ClearAll();
-            WriteObject(true);
+            ProfileClient.Repair(WhatIf.IsPresent);
         }
     }
 }
