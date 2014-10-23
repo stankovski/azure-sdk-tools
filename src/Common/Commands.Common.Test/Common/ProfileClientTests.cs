@@ -1117,27 +1117,91 @@ namespace Microsoft.WindowsAzure.Commands.Common.Test.Common
         }
 
         [Fact]
-        public void SingleInvalidEnvironmentGetsRemoved()
+        public void SingleInvalidEnvironmentWithMissingEndpointGetsRemoved()
         {
             MockDataStore dataStore = new MockDataStore();
             ProfileClient.DataStore = dataStore;
             ProfileClient client = new ProfileClient();
-            AzureEnvironment env = new AzureEnvironment();
-            env.Endpoints[AzureEnvironment.Endpoint.ActiveDirectory] = "https://helloworld.example";
-            env.Endpoints[AzureEnvironment.Endpoint.ActiveDirectoryServiceEndpointResourceId] = "https://helloworld.example";
-            env.Endpoints[AzureEnvironment.Endpoint.AdTenant] = "https://helloworld.example";
-            env.Endpoints[AzureEnvironment.Endpoint.Gallery] = "https://helloworld.example";
-            env.Endpoints[AzureEnvironment.Endpoint.Graph] = "https://helloworld.example";
-            env.Endpoints[AzureEnvironment.Endpoint.ManagementPortalUrl] = "https://helloworld.example";
-            env.Endpoints[AzureEnvironment.Endpoint.PublishSettingsFileUrl] = "https://helloworld.example";
-            env.Endpoints[AzureEnvironment.Endpoint.ResourceManager] = "https://helloworld.example";
-            //env.Endpoints[AzureEnvironment.Endpoint.ServiceManagement] = "https://helloworld.example";
-            env.Name = "TestEnv";
+            AzureEnvironment env = new AzureEnvironment
+            {
+                Name = "TestEnv",
+                Endpoints = new Dictionary<AzureEnvironment.Endpoint, string>
+                {
+                    {AzureEnvironment.Endpoint.ActiveDirectory, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ActiveDirectoryServiceEndpointResourceId, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.AdTenant, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.Gallery, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.Graph, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ManagementPortalUrl, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.PublishSettingsFileUrl, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ResourceManager, "https://helloworld.example"},
+                    //AzureEnvironment.Endpoint.ServiceManagement, "https://helloworld.example"},
+
+                }
+            };
+            client.AddOrSetEnvironment(env);
+            client.Repair((string target) => true);
+            Assert.Equal(0, client.ListEnvironments("TestEnv").Count);
+        }
+
+        [Fact]
+        public void SingleInvalidEnvironmentWithInvalidEndpointGetsRemoved()
+        {
+            MockDataStore dataStore = new MockDataStore();
+            ProfileClient.DataStore = dataStore;
+            ProfileClient client = new ProfileClient();
+            AzureEnvironment env = new AzureEnvironment
+            {
+                Name = "TestEnv",
+                Endpoints = new Dictionary<AzureEnvironment.Endpoint, string>
+                {
+                    {AzureEnvironment.Endpoint.ActiveDirectory, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ActiveDirectoryServiceEndpointResourceId, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.AdTenant, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.Gallery, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.Graph, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ManagementPortalUrl, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.PublishSettingsFileUrl, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ResourceManager, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ServiceManagement, "This is not a valid Uri"},
+
+                }
+            };
 
             client.AddOrSetEnvironment(env);
             client.Repair((string target) => true);
             Assert.Equal(0, client.ListEnvironments("TestEnv").Count);
         }
+
+        [Fact]
+        public void SingleValidEnvironmentDoesNotGetRemoved()
+        {
+            MockDataStore dataStore = new MockDataStore();
+            ProfileClient.DataStore = dataStore;
+            ProfileClient client = new ProfileClient();
+            AzureEnvironment env = new AzureEnvironment
+            {
+                Name = "TestEnv",
+                Endpoints = new Dictionary<AzureEnvironment.Endpoint, string>
+                {
+                    {AzureEnvironment.Endpoint.ActiveDirectory, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ActiveDirectoryServiceEndpointResourceId, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.AdTenant, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.Gallery, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.Graph, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ManagementPortalUrl, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.PublishSettingsFileUrl, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ResourceManager, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ServiceManagement, "https://helloworld.example"},
+
+                }
+            };
+
+            client.AddOrSetEnvironment(env);
+            client.Repair((string target) => true);
+            Assert.Equal(1, client.ListEnvironments("TestEnv").Count);
+        }
+
 
         private void SetMocks(List<WindowsAzure.Subscriptions.Models.SubscriptionListOperationResponse.Subscription> rdfeSubscriptions,
             List<Azure.Subscriptions.Models.Subscription> csmSubscriptions)
