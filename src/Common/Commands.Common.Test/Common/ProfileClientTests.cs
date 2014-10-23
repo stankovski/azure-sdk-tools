@@ -1135,7 +1135,7 @@ namespace Microsoft.WindowsAzure.Commands.Common.Test.Common
             env.Name = "TestEnv";
 
             client.AddOrSetEnvironment(env);
-            client.Repair(false);
+            client.Repair((string target) => true);
             Assert.Equal(0, client.ListEnvironments("TestEnv").Count);
         }
 

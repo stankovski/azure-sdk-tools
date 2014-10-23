@@ -1143,9 +1143,9 @@ namespace Microsoft.WindowsAzure.Commands.Common
         }
         #endregion
 
-        public void Repair(bool whatIf)
+        public void Repair(Func<string, bool> shouldProcess)
         {
-            RepairEnvironments(whatIf);    
+            RepairEnvironments(true);    
         }
 
         private static AzureEnvironment.Endpoint[] endpointsToValidate = {
