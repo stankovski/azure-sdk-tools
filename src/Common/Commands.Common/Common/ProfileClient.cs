@@ -1145,59 +1145,18 @@ namespace Microsoft.WindowsAzure.Commands.Common
 
         public void Repair(Func<string, bool> shouldProcess)
         {
-            RepairEnvironments(shouldProcess);    
+            RepairSubscriptions(shouldProcess);
+            RepairAccounts(shouldProcess);
         }
 
-        private static AzureEnvironment.Endpoint[] endpointsToValidate = {
-            AzureEnvironment.Endpoint.ActiveDirectory,
-            AzureEnvironment.Endpoint.ActiveDirectoryServiceEndpointResourceId,
-            AzureEnvironment.Endpoint.AdTenant,
-            AzureEnvironment.Endpoint.Gallery,
-            AzureEnvironment.Endpoint.Graph,
-            AzureEnvironment.Endpoint.ManagementPortalUrl,
-            AzureEnvironment.Endpoint.PublishSettingsFileUrl,
-            AzureEnvironment.Endpoint.ResourceManager,
-            AzureEnvironment.Endpoint.ServiceManagement,
-        };
-
-        private static AzureEnvironment.Endpoint[] requiredEndpoints = {
-            AzureEnvironment.Endpoint.ActiveDirectory,
-            AzureEnvironment.Endpoint.ActiveDirectoryServiceEndpointResourceId,
-            AzureEnvironment.Endpoint.ServiceManagement,
-        };
-
-        private void RepairEnvironments(Func<string, bool> shouldProcess)
+        private void RepairSubscriptions(Func<string, bool> shouldProcess)
         {
-            List<string> namesToRemove = new List<string>();
-            foreach (var kvp in Profile.Environments)
-            {
-                string name = kvp.Key;
-                var env = kvp.Value;
-
-                bool hasRequiredKeys = requiredEndpoints.All(ep => env.Endpoints.ContainsKey(ep));
-
-                bool isValid = endpointsToValidate
-                    .All(endpoint => 
-                        !env.Endpoints.ContainsKey(endpoint) || IsValidUri(env.Endpoints[endpoint]));
-                if (!(isValid && hasRequiredKeys))
-                {
-                    namesToRemove.Add(name);
-                }
-            }
-
-            foreach (string name in namesToRemove)
-            {
-                if (shouldProcess(string.Format("Environment {0} is invalid and will be removed", name)))
-                {
-                    Profile.Environments.Remove(name);
-                }
-            }
+            
         }
 
-        private bool IsValidUri(string uri)
+        private void RepairAccounts(Func<string, bool> shouldProcess)
         {
-            Uri result;
-            return Uri.TryCreate(uri, UriKind.Absolute, out result);
+            
         }
     }
 }

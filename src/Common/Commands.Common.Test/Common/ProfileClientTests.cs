@@ -1117,71 +1117,30 @@ namespace Microsoft.WindowsAzure.Commands.Common.Test.Common
         }
 
         [Fact]
-        public void SingleInvalidEnvironmentWithMissingEndpointGetsRemoved()
+        public void EmptyProfileIsUnchanged()
         {
             MockDataStore dataStore = new MockDataStore();
             ProfileClient.DataStore = dataStore;
             ProfileClient client = new ProfileClient();
-            AzureEnvironment env = new AzureEnvironment
-            {
-                Name = "TestEnv",
-                Endpoints = new Dictionary<AzureEnvironment.Endpoint, string>
-                {
-                    {AzureEnvironment.Endpoint.ActiveDirectory, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.ActiveDirectoryServiceEndpointResourceId, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.AdTenant, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.Gallery, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.Graph, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.ManagementPortalUrl, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.PublishSettingsFileUrl, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.ResourceManager, "https://helloworld.example"},
-                    //AzureEnvironment.Endpoint.ServiceManagement, "https://helloworld.example"},
-
-                }
-            };
-            client.AddOrSetEnvironment(env);
             client.Repair((string target) => true);
-            Assert.Equal(0, client.ListEnvironments("TestEnv").Count);
+            Assert.Equal(2, client.ListEnvironments(null).Count);
+            Assert.Equal(0, client.ListAccounts(null).Count());
+            Assert.Equal(0, client.ListSubscriptionAccounts(new Guid()).Count());
         }
 
         [Fact]
-        public void SingleInvalidEnvironmentWithInvalidEndpointGetsRemoved()
+        public void ValidProfileIsUnchanged()
         {
             MockDataStore dataStore = new MockDataStore();
             ProfileClient.DataStore = dataStore;
             ProfileClient client = new ProfileClient();
+            const string environmentName = "TestEnv1";
+            const string accountId = "myaccount@ccsctp.net";
+            Guid subscriptionId = Guid.NewGuid();
+
             AzureEnvironment env = new AzureEnvironment
             {
-                Name = "TestEnv",
-                Endpoints = new Dictionary<AzureEnvironment.Endpoint, string>
-                {
-                    {AzureEnvironment.Endpoint.ActiveDirectory, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.ActiveDirectoryServiceEndpointResourceId, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.AdTenant, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.Gallery, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.Graph, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.ManagementPortalUrl, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.PublishSettingsFileUrl, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.ResourceManager, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.ServiceManagement, "This is not a valid Uri"},
-
-                }
-            };
-
-            client.AddOrSetEnvironment(env);
-            client.Repair((string target) => true);
-            Assert.Equal(0, client.ListEnvironments("TestEnv").Count);
-        }
-
-        [Fact]
-        public void SingleValidEnvironmentDoesNotGetRemoved()
-        {
-            MockDataStore dataStore = new MockDataStore();
-            ProfileClient.DataStore = dataStore;
-            ProfileClient client = new ProfileClient();
-            AzureEnvironment env = new AzureEnvironment
-            {
-                Name = "TestEnv",
+                Name = environmentName,
                 Endpoints = new Dictionary<AzureEnvironment.Endpoint, string>
                 {
                     {AzureEnvironment.Endpoint.ActiveDirectory, "https://helloworld.example"},
@@ -1197,20 +1156,48 @@ namespace Microsoft.WindowsAzure.Commands.Common.Test.Common
                 }
             };
 
+            AzureSubscription sub = new AzureSubscription
+            {
+                Name = "TestSubscription1",
+                Environment = environmentName,
+                Id = subscriptionId,
+                Account = accountId
+            };
+
+            AzureAccount account = new AzureAccount
+            {
+                Id = accountId,
+                Type = AzureAccount.AccountType.User,
+                Properties = new Dictionary<AzureAccount.Property, string>
+                {
+                    {AzureAccount.Property.Subscriptions, subscriptionId.ToString() }
+                }
+            };
+            
             client.AddOrSetEnvironment(env);
+            client.AddOrSetAccount(account);
+            client.AddOrSetSubscription(sub);
+            
             client.Repair((string target) => true);
-            Assert.Equal(1, client.ListEnvironments("TestEnv").Count);
+            
+            Assert.Equal(1, client.ListEnvironments(environmentName).Count);
+            Assert.Equal(1, client.ListAccounts(accountId).Count());
+            Assert.Equal(1, client.ListSubscriptionAccounts(subscriptionId).Count());
         }
 
-        [Fact]
-        public void SingleInvalidEnvironmentWithInvalidEndpointDoesNotGetRemovedWhenWhatifSet()
+        [Fact(Skip = "Work In Progress Go Slow")]
+        public void SubscriptionAndAccountWithInvalidEnvironmentIsRemoved()
         {
             MockDataStore dataStore = new MockDataStore();
             ProfileClient.DataStore = dataStore;
             ProfileClient client = new ProfileClient();
+            const string environmentName = "TestEnv1";
+            const string accountId = "myaccount@ccsctp.net";
+            Guid subscriptionId = Guid.NewGuid();
+
             AzureEnvironment env = new AzureEnvironment
             {
-                Name = "TestEnv",
+                Name = environmentName,
                 Endpoints = new Dictionary<AzureEnvironment.Endpoint, string>
                 {
                     {AzureEnvironment.Endpoint.ActiveDirectory, "https://helloworld.example"},
@@ -1221,14 +1208,47 @@ namespace Microsoft.WindowsAzure.Commands.Common.Test.Common
                     {AzureEnvironment.Endpoint.ManagementPortalUrl, "https://helloworld.example"},
                     {AzureEnvironment.Endpoint.PublishSettingsFileUrl, "https://helloworld.example"},
                     {AzureEnvironment.Endpoint.ResourceManager, "https://helloworld.example"},
-                    {AzureEnvironment.Endpoint.ServiceManagement, "This is not a valid Uri"},
+                    {AzureEnvironment.Endpoint.ServiceManagement, "https://helloworld.example"},
 
                 }
             };
 
-            client.AddOrSetEnvironment(env);
-            client.Repair((string target) => false);
-            Assert.Equal(1, client.ListEnvironments("TestEnv").Count);
+            AzureSubscription sub = new AzureSubscription
+            {
+                Name = "TestSubscription1",
+                Environment = "AzureCloud",
+                Id = subscriptionId,
+                Account = accountId
+            };
+
+            AzureAccount account = new AzureAccount
+            {
+                Id = accountId,
+                Type = AzureAccount.AccountType.User,
+                Properties = new Dictionary<AzureAccount.Property, string>
+                {
+                    {AzureAccount.Property.Subscriptions, subscriptionId.ToString() }
+                }
+            };
+
+            client.AddOrSetAccount(account);
+            client.AddOrSetSubscription(sub);
+            client.Profile.Save();
+            string foundKey = "";
+            foreach (string key in dataStore.VirtualStore.Keys)
+            {
+                if (key.Contains("AzureProfile.json"))
+                {
+                    foundKey = key;
+                }
+            }
+            dataStore.VirtualStore[foundKey] = dataStore.VirtualStore[foundKey].Replace("AzureCloud", environmentName);
+            client = new ProfileClient(foundKey);
+            client.Repair((string target) => true);
+            
+            Assert.Equal(0, client.ListEnvironments(environmentName).Count);
+            Assert.Equal(0, client.ListAccounts(accountId).Count());
+            Assert.Equal(0, client.ListSubscriptionAccounts(subscriptionId).Count());
         }
         
         private void SetMocks(List<WindowsAzure.Subscriptions.Models.SubscriptionListOperationResponse.Subscription> rdfeSubscriptions,
