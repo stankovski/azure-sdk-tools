@@ -1202,7 +1202,35 @@ namespace Microsoft.WindowsAzure.Commands.Common.Test.Common
             Assert.Equal(1, client.ListEnvironments("TestEnv").Count);
         }
 
+        [Fact]
+        public void SingleInvalidEnvironmentWithInvalidEndpointDoesNotGetRemovedWhenWhatifSet()
+        {
+            MockDataStore dataStore = new MockDataStore();
+            ProfileClient.DataStore = dataStore;
+            ProfileClient client = new ProfileClient();
+            AzureEnvironment env = new AzureEnvironment
+            {
+                Name = "TestEnv",
+                Endpoints = new Dictionary<AzureEnvironment.Endpoint, string>
+                {
+                    {AzureEnvironment.Endpoint.ActiveDirectory, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ActiveDirectoryServiceEndpointResourceId, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.AdTenant, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.Gallery, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.Graph, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ManagementPortalUrl, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.PublishSettingsFileUrl, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ResourceManager, "https://helloworld.example"},
+                    {AzureEnvironment.Endpoint.ServiceManagement, "This is not a valid Uri"},
 
+                }
+            };
+
+            client.AddOrSetEnvironment(env);
+            client.Repair((string target) => false);
+            Assert.Equal(1, client.ListEnvironments("TestEnv").Count);
+        }
+        
         private void SetMocks(List<WindowsAzure.Subscriptions.Models.SubscriptionListOperationResponse.Subscription> rdfeSubscriptions,
             List<Azure.Subscriptions.Models.Subscription> csmSubscriptions)
         {
